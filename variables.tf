@@ -42,3 +42,12 @@ variable "ip_allocation" {
   type        = string
   description = "this is the ip_allocation of the instance."
 }
+variable "use_user_defined_dataproc_service_account" {
+  description = "Set to true if you want to provide a custom Dataproc service account. Set to false to use the default service account."
+  type        = bool
+}
+
+variable "user_defined_dataproc_service_account" {
+  description = "Custom Dataproc service account email. Only used if use_user_defined_dataproc_service_account is set to true."
+  type        = string
+}

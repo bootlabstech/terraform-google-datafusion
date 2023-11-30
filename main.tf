@@ -22,7 +22,8 @@ resource "google_data_fusion_instance" "extended_instance" {
     ip_allocation = var.ip_allocation
   }
   version = var.datafusion_version
-  dataproc_service_account = data.google_app_engine_default_service_account.default.email
+  # Conditionally set the dataproc_service_account based on user input
+  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : data.google_app_engine_default_service_account.default.email
 }
 
 data "google_app_engine_default_service_account" "default" {
