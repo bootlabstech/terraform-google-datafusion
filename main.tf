@@ -1,10 +1,4 @@
-resource "google_project_service" "datafusion" {
-  project = var.project_id
-  service = "datafusion.googleapis.com"
-}
-
 resource "google_data_fusion_instance" "extended_instance" {
-  depends_on = [google_project_service.datafusion]
   provider   = "google-beta"
   name = var.name
   description = "My Data Fusion instance"
