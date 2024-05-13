@@ -31,6 +31,6 @@ resource "google_project_iam_binding" "network_binding6" {
   project = var.project_id
   role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   members = [
-    "serviceAccount:bq-${data.google_project.service_project5.number}@bigquery-encryption.iam.gserviceaccount.com",
+    "serviceAccount:service-${data.google_project.service_project5.number}@gcp-sa-datafusion.iam.gserviceaccount.com",
   ]
 }
