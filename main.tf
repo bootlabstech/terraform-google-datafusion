@@ -23,3 +23,14 @@ resource "google_data_fusion_instance" "extended_instance" {
 data "google_app_engine_default_service_account" "default" {
     project= var.project_id
 }
+data "google_project" "service_project5" {
+  project_id = var.project_id
+}
+resource "google_project_iam_binding" "network_binding6" {
+  count   = 1
+  project = var.project_id
+  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  members = [
+    "serviceAccount:bq-${data.google_project.service_project5.number}@bigquery-encryption.iam.gserviceaccount.com",
+  ]
+}
