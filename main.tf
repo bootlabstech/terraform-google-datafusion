@@ -1,42 +1,29 @@
 resource "google_data_fusion_instance" "extended_instance" {
   provider   = "google-beta"
-  name = var.name
+  name       = var.name
   description = "My Data Fusion instance"
-  project = var.project_id
-  region = var.region
-  type = var.datafusion_type
-  enable_stackdriver_logging = var.logging_enabled
-  enable_stackdriver_monitoring = var.monitoring_enabled
+  project    = var.project_id
+  region     = var.region
+  type       = var.datafusion_type
+  enable_stackdriver_logging     = var.logging_enabled
+  enable_stackdriver_monitoring  = var.monitoring_enabled
   labels = {
     example_key = "example_value"
   }
   private_instance = var.is_private
-  network_config {
-    network = var.network
-    ip_allocation = var.ip_allocation
-  }
-  version = var.datafusion_version
-  # Conditionally set the dataproc_service_account based on user input
-  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : data.google_app_engine_default_service_account.default.email
-}
 
-data "google_app_engine_default_service_account" "default" {
-    project= var.project_id
-}
-data "google_project" "service_project5" {
-  project_id = var.project_id
-}
-# Optional data block to validate existing manually-created service account
-data "google_service_account" "user_defined_sa" {
-  count      = var.use_user_defined_dataproc_service_account ? 1 : 0
-  project    = var.project_id
-  account_id = split("@", var.user_defined_dataproc_service_account)[0]
-}
-resource "google_project_iam_binding" "network_binding6" {
-  count   = 1
-  project = var.project_id
-  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  members = [
-    "serviceAccount:service-${data.google_project.service_project5.number}@gcp-sa-datafusion.iam.gserviceaccount.com",
-  ]
+  network_config {
+    network        = var.network
+    ip_allocation  = var.ip_allocation
+  }
+
+  version = var.datafusion_version
+
+  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : data.google_app_engine_default_service_account.default.email
+
+  lifecycle {
+    ignore_changes = [
+      dataproc_service_account
+    ]
+  }
 }
