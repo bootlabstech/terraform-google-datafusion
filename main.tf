@@ -1,3 +1,11 @@
+data "google_app_engine_default_service_account" "default" {
+  project = var.project_id
+}
+
+data "google_project" "service_project5" {
+  project_id = var.project_id
+}
+
 resource "google_data_fusion_instance" "extended_instance" {
   provider   = "google-beta"
   name       = var.name
@@ -34,6 +42,6 @@ resource "google_project_iam_binding" "network_binding6" {
   project = var.project_id
   role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
   members = [
-    "serviceAccount:service-${var.project_number}@gcp-sa-datafusion.iam.gserviceaccount.com",
+    "serviceAccount:service-${data.google_project.service_project5.number}@gcp-sa-datafusion.iam.gserviceaccount.com",
   ]
 }
