@@ -28,7 +28,7 @@ resource "google_data_fusion_instance" "extended_instance" {
 
   version = var.datafusion_version
 
-  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : ""
+  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : data.google_app_engine_default_service_account.default.email
 
   lifecycle {
     ignore_changes = [
