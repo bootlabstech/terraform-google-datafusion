@@ -7,10 +7,11 @@ resource "google_data_fusion_instance" "extended_instance" {
   type       = var.datafusion_type
   enable_stackdriver_logging     = var.logging_enabled
   enable_stackdriver_monitoring  = var.monitoring_enabled
+  private_instance               = var.is_private
+
   labels = {
     example_key = "example_value"
   }
-  private_instance = var.is_private
 
   network_config {
     network        = var.network
@@ -19,11 +20,20 @@ resource "google_data_fusion_instance" "extended_instance" {
 
   version = var.datafusion_version
 
-  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : data.google_app_engine_default_service_account.default.email
+  dataproc_service_account = var.use_user_defined_dataproc_service_account ? var.user_defined_dataproc_service_account : ""
 
   lifecycle {
     ignore_changes = [
       dataproc_service_account
     ]
   }
+}
+
+resource "google_project_iam_binding" "network_binding6" {
+  count   = 1
+  project = var.project_id
+  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  members = [
+    "serviceAccount:service-${var.project_number}@gcp-sa-datafusion.iam.gserviceaccount.com",
+  ]
 }
