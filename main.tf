@@ -26,6 +26,12 @@ data "google_app_engine_default_service_account" "default" {
 data "google_project" "service_project5" {
   project_id = var.project_id
 }
+# Optional data block to validate existing manually-created service account
+data "google_service_account" "user_defined_sa" {
+  count      = var.use_user_defined_dataproc_service_account ? 1 : 0
+  project    = var.project_id
+  account_id = split("@", var.user_defined_dataproc_service_account)[0]
+}
 resource "google_project_iam_binding" "network_binding6" {
   count   = 1
   project = var.project_id
